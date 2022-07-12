@@ -1,17 +1,17 @@
 package me.muawb.project.file;
 
-import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import me.muawb.project.gui.Login;
 import me.muawb.project.gui.Options;
 import javax.swing.*;
 import java.io.*;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 public class FileManager {
-
-    private static final String PATH_TO_DATA = "src/main/resources/data/user.properties";
 
     private static File wrk;
     private static File workDir = null;
@@ -57,9 +57,10 @@ public class FileManager {
         try {
             data = new Properties();
             data.setProperty(key, field.getText());
-            out = new FileOutputStream(PATH_TO_DATA);
+            out = new FileOutputStream(FileManager.getWorkDir().getAbsolutePath() +
+                    File.separator + "user.properties");
             data.store(out, comment);
-        } catch (IOException e){
+        } catch (Exception e){
             e.printStackTrace();
         } finally {
             try {
@@ -76,10 +77,11 @@ public class FileManager {
         String str = null;
         try {
             data = new Properties();
-            in = new FileInputStream(PATH_TO_DATA);
+            in = new FileInputStream(FileManager.getWorkDir().getAbsolutePath() +
+                    File.separator + "user.properties");
             data.load(in);
             str = data.getProperty(key);
-        } catch (IOException e){
+        } catch (Exception e){
             e.printStackTrace();
         } finally {
             try {
@@ -95,21 +97,23 @@ public class FileManager {
 
     public void toMapping(JTextField width, JTextField heith){
         Options op = new Options(width.getText(), heith.getText());
-        try(FileWriter writer = new FileWriter("src/main/resources/data/settings.json")) {
+        try(FileWriter writer = new FileWriter(FileManager.getWorkDir().getAbsolutePath() +
+        File.separator + "settings.json")) {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             String str = gson.toJson(op);
             writer.write(str);
-        } catch (IOException e){
+        } catch (Exception e){
             e.printStackTrace();
         }
     }
 
     public String fromMapping(int i){
         Options op = new Options();
-        try(FileReader reader = new FileReader("src/main/resources/data/settings.json")) {
+        try(FileReader reader = new FileReader(FileManager.getWorkDir().getAbsolutePath() +
+        File.separator +  "settings.json")) {
             Gson gson = new Gson();
             op = gson.fromJson(reader, Options.class);
-        } catch (IOException e){
+        } catch (Exception e){
             e.printStackTrace();
         }
         switch (i){
