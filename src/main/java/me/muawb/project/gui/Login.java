@@ -82,8 +82,7 @@ public class Login extends JComponent implements Frame, Serializable{
         join.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                join.setEnabled(false);
-                manager.setName(userName, "name", "load user name from Minecraft");
+                manager.setName(userName, "name", "save user name from Minecraft");
                 try {
                     factory = new CreateFactory();
                     factory.createConnection(userName.getText(), password.getText(), join, jf);

@@ -1,6 +1,7 @@
 package me.muawb.project.gui;
 
 import me.muawb.project.file.CheckFile;
+import me.muawb.project.file.FileManager;
 import me.muawb.project.utils.BarPainter;
 import me.muawb.project.utils.Sound;
 import javax.swing.*;
@@ -14,7 +15,6 @@ public class StartPage extends JComponent implements Frame {
 
     private static final int WIDTH = 750;
     private static final int HEITH = 400;
-    private static final String PATH_TO_SOUND = "src/main/resources/sound/key.wav";
 
     private String title;
     private JFrame frame;
@@ -133,7 +133,9 @@ public class StartPage extends JComponent implements Frame {
             frame.validate();
             frame.setVisible(true);
 
-            File f = new File(PATH_TO_SOUND);
+
+            File f = new File(FileManager.getWorkDir().getAbsolutePath() +
+                    File.separator + "key.wav");
             breack = true;
             try (Sound sound = new Sound(f)){
                 while (breack){

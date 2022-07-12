@@ -1,5 +1,6 @@
 package me.muawb.project.manager;
 
+import me.muawb.project.file.FileManager;
 import me.muawb.project.gui.StartPage;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -10,6 +11,10 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import javax.persistence.Query;
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Paths;
 
 public class CreateFactory {
 
@@ -17,11 +22,11 @@ public class CreateFactory {
 
     public void createConnection(String name, String pass, JButton bu, JFrame jf){
         new Thread(() -> {
+            bu.setEnabled(false);
             SessionFactory sessionFactory = buildSessionFactory();
             Session session = sessionFactory.openSession();
             try {
                 session.getTransaction().begin();
-
                 Query query = session.createQuery(cmd);
                 query.setParameter("param", name);
                 Users users = (Users) query.getSingleResult();
@@ -37,8 +42,10 @@ public class CreateFactory {
 
                 session.getTransaction().commit();
             } catch (Exception e) {
-                System.err.println(e.getCause());
+                e.printStackTrace();
             } finally {
+                bu.setBackground(new Color(153,0,0));
+                bu.setEnabled(true);
                 session.close();
             }
         })
@@ -48,7 +55,7 @@ public class CreateFactory {
 
     public static SessionFactory buildSessionFactory(){
         StandardServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().
-                configure("data/hibernate.cfg.xml").build();
+                configure(CreateFactory.class.getResource("/data/hibernate.cfg.xml")).build();
         Metadata metadata = new MetadataSources(serviceRegistry).getMetadataBuilder().build();
         return metadata.getSessionFactoryBuilder().build();
     }
